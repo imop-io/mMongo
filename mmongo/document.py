@@ -57,15 +57,17 @@ class Document(_Document, metaclass=DocumentMetaClass):
 
     __loop__ = None
 
+    __collection_name__ = None
+
     def __new__(cls, *args, **kwargs):
         if cls.__collection__:
             return super().__new__(cls, *args, **kwargs)
         connection = cls.__connection__
-        database_name = connection.get_default_database().name
+        # database_name = connection.get_default_database().name
 
-        collection_name = to_snake_case(cls.__name__)
+        collection_name = cls.__collection_name__ or to_snake_case(cls.__name__)
         collection = connection \
-            .get_database(database_name) \
+            .get_default_database() \
             .get_collection(collection_name)
         codec_options = collection \
             .codec_options \
@@ -73,7 +75,7 @@ class Document(_Document, metaclass=DocumentMetaClass):
 
         cls.__collection__ = collection \
             .with_options(codec_options=codec_options)
-        cls.__database_name__ = database_name
+        cls.__database_name__ = cls.__collection__.database.name
         cls.__collection_name__ = collection_name
 
         return super().__new__(cls, *args, **kwargs)

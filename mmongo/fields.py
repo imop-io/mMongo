@@ -14,11 +14,14 @@ class Field(object):
         self.default = default
 
     def validate(self, value):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     @property
     def types(self):
         return self._types
+
+    def ensure_value(self, value):
+        return value
 
 
 class StringField(Field):
@@ -86,6 +89,9 @@ class SequenceField(Field):
                 return False
         return True
 
+    def ensure_value(self, value):
+        return list(value)
+
 
 class ComplexField(Field):
     _types = ()
@@ -105,3 +111,18 @@ class EnumField(Field):
         if value in self._enum:
             return True
         return False
+
+
+class BoolField(EnumField):
+    def __init__(self, required=None, index=None, default=Null()):
+        super().__init__((True, False), required, index, default)
+
+    def validate(self, value):
+        if not self.required:
+            return True
+        if bool(value) in self._enum:
+            return True
+        return False
+
+    def ensure_value(self, value):
+        return bool(value)

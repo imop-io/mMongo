@@ -36,6 +36,4 @@ def validate_columns_before_save(*args):
 
 
 def log_modified_after_save(*args):
-    print('after save')
-    logger.info(args)
-    print(*args)
+    logger.debug('after save %s', args)
