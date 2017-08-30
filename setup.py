@@ -5,9 +5,9 @@ from setuptools import setup
 from mmongo import _version
 
 setup(
-    name=_project,
+    name='mMongo',
     version=_version,
-    license=_license,
+    license='https://www.gnu.org/licenses/gpl-3.0.en.html',
     description='A python ODM of mongo based on motor',
     long_description='',
     platforms=('Any'),
