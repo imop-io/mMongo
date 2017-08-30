@@ -6,6 +6,7 @@ class Null(object):
 
 
 class Field(object):
+    _types = None
 
     def __init__(self, required=None, index=None, default=Null()):
         self.required = required
@@ -71,14 +72,14 @@ class SequenceField(Field):
     def __init__(self, required=None, index=None, default=Null(),
                  sub_fields=[]):
         super().__init__(required, index, default)
-        self.sub_fields = sub_fields
+        self._sub_fields = sub_fields
 
     def validate(self, value):
         if not self.required:
             return True
         if not isinstance(value, self.types):
             return False
-        for field, val in zip(self.sub_fields, value):
+        for field, val in zip(self._sub_fields, value):
             if not isinstance(field, Field):
                 return False
             if not field.validate(val):
@@ -91,3 +92,16 @@ class ComplexField(Field):
     
     def validate(self, value):
         return True
+
+
+class EnumField(Field):
+    def __init__(self, enum, required=None, index=None, default=Null()):
+        self._enum = enum
+        super().__init__(required, index, default)
+
+    def validate(self, value):
+        if not self.required:
+            return True
+        if value in self._enum:
+            return True
+        return False
