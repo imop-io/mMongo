@@ -1,12 +1,28 @@
 #!/usr/bin/env python
 
+import os
+import re
 from setuptools import setup
 
-from mmongo import _version
+from mmongo import __version__
+
+def _read(pathes):
+    path = os.path.join(
+        os.path.abspath(os.path.dirname(__file__)),
+        *pathes,
+    )
+    with open(path, encoding='utf8') as _file:
+        return _file.read()
+
+version = re.findall(
+    r"^__version__ = '([^']+)'\r?$",
+    _read(['mmongo', '__init__.py']),
+    re.M
+)
 
 setup(
     name='mMongo',
-    version=_version,
+    version=__version__,
     license='https://www.gnu.org/licenses/gpl-3.0.en.html',
     description='A python ODM of mongo based on motor',
     long_description='',
@@ -32,6 +48,6 @@ setup(
         'Topic :: Utilities',
     ],
 
-    py_modules=['mmongo'],
+    packages=['mmongo'],
     install_requires=['motor', 'mtypes'],
 )

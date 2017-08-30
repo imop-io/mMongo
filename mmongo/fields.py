@@ -7,12 +7,7 @@ class Null(object):
 
 class Field(object):
 
-    def __init__(
-        self,
-        required=None,
-        index=None,
-        default=Null()
-    ):
+    def __init__(self, required=None, index=None, default=Null()):
         self.required = required
         self.index = index
         self.default = default
@@ -30,7 +25,7 @@ class StringField(Field):
 
     def validate(self, value):
         if self.required:
-            if isinstance(value, self._types):
+            if isinstance(value, self.types):
                 return True
             return False
         return True
@@ -42,7 +37,7 @@ class IntegerField(Field):
     def validate(self, value):
         if not self.required:
             return True
-        if not isinstance(value, self._types):
+        if not isinstance(value, self.types):
             return False
         return True
 
@@ -53,7 +48,7 @@ class FloatField(Field):
     def validate(self, value):
         if not self.required:
             return True
-        if not isinstance(value, self._types):
+        if not isinstance(value, self.types):
             return False
         return True
 
@@ -64,6 +59,35 @@ class NumericField(Field):
     def validate(self, value):
         if not self.required:
             return True
-        if not isinstance(value, self._types):
+        if not isinstance(value, self.types):
             return False
+        return True
+
+
+class SequenceField(Field):
+
+    _types = (list,)
+
+    def __init__(self, required=None, index=None, default=Null(),
+                 sub_fields=[]):
+        super().__init__(required, index, default)
+        self.sub_fields = sub_fields
+
+    def validate(self, value):
+        if not self.required:
+            return True
+        if not isinstance(value, self.types):
+            return False
+        for field, val in zip(self.sub_fields, value):
+            if not isinstance(field, Field):
+                return False
+            if not field.validate(val):
+                return False
+        return True
+
+
+class ComplexField(Field):
+    _types = ()
+    
+    def validate(self, value):
         return True
