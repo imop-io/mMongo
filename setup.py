@@ -19,9 +19,9 @@ setup(
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: GPLv3 License',
+        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
         'Natural Language :: English',
-        'Natural Language :: Chinese',
+        'Natural Language :: Chinese (Simplified)',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
@@ -33,5 +33,5 @@ setup(
     ],
 
     py_modules=['mmongo'],
-    install_requires=['motor'],
+    install_requires=['motor', 'mtypes'],
 )
