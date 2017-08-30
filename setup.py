@@ -11,7 +11,7 @@ setup(
     description='A python ODM of mongo based on motor',
     long_description='',
     platforms=('Any'),
-    keywords = ["asyncio", "motor", "mongo"]
+    keywords = ["asyncio", "motor", "mongo"],
 
     author='songww',
     author_email='sww4718168@gmail.com',
